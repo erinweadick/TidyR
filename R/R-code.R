@@ -25,4 +25,4 @@ tidy_data <- function(data) {
 
 cleaned_Data <-tidy_data(data)
 
-devtools::check()
+
