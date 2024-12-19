@@ -1,4 +1,4 @@
-
+library(readr)
 library(dplyr)
 library(janitor)
 data <- read_csv("R/Advanced r programming dataset.csv")
@@ -18,7 +18,7 @@ tidy_data <- function(data) {
 
   tidied_data <- data %>%
     na.omit(data) %>%
-    janitor::clean_names(case = "snake") ## changes all column names to snake_case (lowercase and spaces replaced with)
+    clean_names(case = "snake") ## changes all column names to snake_case (lowercase and spaces replaced with)
 
   return(tidied_data)
 }
@@ -27,6 +27,13 @@ tidy_data <- function(data) {
 cleaned_Data <-tidy_data(data)
 
 
+## Function 2: Making this dataset available as part of this R package
 
-#### tidy r test
+load_data <- function(data){
+
+  usethis::use_data(data, compress="xz",overwrite = TRUE)
+
+}
+
+load_data(cleaned_Data)
 
