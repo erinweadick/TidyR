@@ -2,6 +2,7 @@ library(readr)
 library(dplyr)
 library(janitor)
 library(roxygen2)
+library(ggplot2)
 
 data <- read_csv("R/Advanced r programming dataset.csv")
 
@@ -54,4 +55,23 @@ load_data <- function(data){
 }
 
 load_data(cleaned_Data)
+
+##Function 3: Plotting inputted x vs. y
+
+plot.tidy_data <- function(object, x, y, ...) {
+
+  if (missing(x) || missing(y)) {
+
+    stop("You must specify both x and y for the plot.")
+
+  }
+
+  ggplot(object, aes(x = .data[[x]], y = .data[[y]] )) +
+    geom_point() +
+    theme_minimal() +
+    labs(title = "Tidy Data Plot")
+}
+
+
+plot.tidy_data(cleaned_Data, "spad", "chlorophyll")
 
