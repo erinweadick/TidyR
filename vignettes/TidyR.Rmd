@@ -1,0 +1,19 @@
+---
+title: "TidyR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{TidyR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(TidyR)
+```
