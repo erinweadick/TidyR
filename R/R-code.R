@@ -57,7 +57,21 @@ load_data <- function(data){
 load_data(cleaned_Data)
 
 ##Function 3: Plotting inputted x vs. y
-
+#' Plot one variable against another in the tidied dataset
+#'
+#' This function takes a tidied dataset, plus the desired x and y columns,
+#' and produces a scatter plot with a linear regression line.
+#'
+#' @param object A data frame (preferably tidied via \code{\link{tidy_data}}).
+#' @param x A character string indicating the x-column name.
+#' @param y A character string indicating the y-column name.
+#' @param ... Other arguments passed to the underlying \code{ggplot2} functions.
+#'
+#' @return A \code{ggplot} object.
+#' @export
+#'
+#' @examples
+#' plot.tidy_data(cleaned_Data, "spad", "chlorophyll")
 plot.tidy_data <- function(object, x, y, ...) {
   if (missing(x) || missing(y)) {
     stop("You must specify both x and y for the plot.")
