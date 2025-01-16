@@ -48,7 +48,6 @@ tidy_data <- function(data, case = "snake") {
 
   return(tidied_data)
 }
-?clean_names
 
 cleaned_Data <-tidy_data(data, "upper_camel")
 
@@ -132,4 +131,5 @@ plot.tidy_data <- function(object, x, y, ...) {
 }
 
 plot.tidy_data(cleaned_Data, "spad", "chlorophyll")
+
 
