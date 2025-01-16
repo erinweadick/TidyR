@@ -79,12 +79,10 @@ plot.tidy_data <- function(object, x, y, ...) {
 
   ggplot(object, aes(x = .data[[x]], y = .data[[y]])) +
     geom_point(color = "steelblue", size = 3, alpha = 0.8) +
-    geom_smooth(method = "lm", color = "darkred", se = FALSE, linetype = "dashed", size = 1) +
+    geom_smooth(method = "lm", color = "darkred", se = FALSE, linetype = "dashed", linewidth = 1) +
     theme_minimal(base_size = 14) +
     theme(
       plot.title = element_text(hjust = 0.5, face = "bold", color = "darkblue", size = 16),
-      axis.title.x = element_text(face = "italic", color = "darkgreen"),
-      axis.title.y = element_text(face = "italic", color = "darkgreen"),
       panel.grid.major = element_line(color = "lightgray", linetype = "dotted"),
       panel.grid.minor = element_blank()
     )
