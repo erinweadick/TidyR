@@ -24,6 +24,8 @@ utils::globalVariables(c("x", "y", "SPAD", "chlorophyll", "stomatal", "leaf thic
 #' @author Daniel McKean - <\email{daniel.mckean.2022@@mumail.ie}>
 #' @author Laurynas Jonikas - <\email{laurynas.jonikas.2022@@mumail.ie}>
 #'
+#'
+#'
 #' @examples
 #' tidy_data <- function(data) {
 #' if (!is.data.frame(data)){
@@ -50,7 +52,7 @@ tidy_data <- function(data, case = "snake") {
 }
 
 cleaned_Data <-tidy_data(data, "snake")
-
+devtools::check()
 
 ## Function 2: Making this dataset available as part of this R package
 
