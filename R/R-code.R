@@ -49,7 +49,7 @@ tidy_data <- function(data, case = "snake") {
   return(tidied_data)
 }
 
-cleaned_Data <-tidy_data(data, "upper_camel")
+cleaned_Data <-tidy_data(data, "snake")
 
 
 ## Function 2: Making this dataset available as part of this R package
@@ -132,4 +132,5 @@ plot.tidy_data <- function(object, x, y, ...) {
 
 plot.tidy_data(cleaned_Data, "spad", "chlorophyll")
 
+devtools::check()
 
