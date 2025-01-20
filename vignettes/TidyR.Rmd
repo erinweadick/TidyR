@@ -20,7 +20,6 @@ knitr::opts_chunk$set(
 # Load your package
 library(TidyR)     
 
-# Load packages that provide %>% and clean_names (if you rely on them in examples)
 library(dplyr)      
 library(janitor)    
 library(ggplot2)
@@ -59,6 +58,12 @@ library(TidyR)
 it will load in all the aforementioned __TidyR__ functions.
 
 //////////////////////////////////////////////
+### Load data
+```{r}
+#load data
+data("raw_data", package = "TidyR")
+head(raw_data)
+```
 
 ## Function 1 : tidy_data
 
@@ -80,7 +85,7 @@ tidy_data <- function(data, case = "snake") {
   return(tidied_data)
 }
 
-cleaned_Data <-tidy_data(data, "snake")
+cleaned_Data <-tidy_data(raw_data, "snake")
 #devtools::check()
 ```
 

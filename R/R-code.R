@@ -1,140 +1,120 @@
-library(readr)
-library(dplyr)
-library(janitor)
-#library(roxygen2)
-library(ggplot2)
+# R-code.R
 
-#data <- read_csv("R/Advanced r programming dataset.csv")
-#data<- as.data.frame(data)
-#load data to temp
-data <- readr::read_csv(
-  file = system.file("extdata", "Advanced_r_programming_dataset.csv", package = "TidyR"))
+# 1) Read and pre-clean the CSV without using the pipe at top-level
+#    (So we avoid the "could not find function `%>%`" error at load time.)
 
-utils::globalVariables(c("x", "y", "SPAD", "chlorophyll", "stomatal", "leaf thickness","Leaf number","Tree ID", "Pot ID", "Culture", "Temperature"))
+#raw_data <- readr::read_csv(
+#  file = system.file("extdata", "Advanced_r_programming_dataset.csv", package = "TidyR"), show_col_types = FALSE
+#)
 
-## Function 1 : Making column names the same and removing any NA values
 
+utils::globalVariables(c(
+  "x", "y", "SPAD", "chlorophyll", "stomatal", "leaf thickness",
+  "Leaf number", "Tree ID", "Pot ID", "Culture", "Temperature"
+))
+# In an R session:
+#raw_data <- readr::read_csv("inst/extdata/Advanced_r_programming_dataset.csv",show_col_types = FALSE)
+#raw_data <- stats::na.omit(raw_data)
+#raw_data <- janitor::clean_names(raw_data, case="snake")
+# Now store it as an .rda in your 'data/' folder:
+#usethis::use_data(raw_data, overwrite=TRUE)
+
+
+# ------------------------------------------------------------------------------
 #' Tidy data for use in other functions
 #'
-#' @param data
-#' @param case The case to which the data column names will be changed to. The case options are \code{"snake"}
-#' (the default), \code{"upper_camel"}, \code{"lower_camel"}, or \code{"title"}
+#' This function removes rows with NA values and cleans up column names
+#' so that they all follow a specified naming case (like snake_case or UpperCamelCase).
 #'
-#' @return An object of class \code{"tidy_data"} which is tidied by omitting NA values and changing column names to be of the same case.
+#' @param data A data frame to be tidied.
+#' @param case The case to which the data column names will be changed.
+#'   Defaults to \code{"snake"}.
+#' @return A data frame (class "tidy_data") that omits NA rows and has standardized column names.
 #' @export
-#' @author Erin Weadick - <\email{erin.weadick.2022@@mumail.ie}>
-#' @author Kate Mullins - <\email{kate.mullins.2022@@mumail.ie}>
-#' @author Daniel McKean - <\email{daniel.mckean.2022@@mumail.ie}>
-#' @author Laurynas Jonikas - <\email{laurynas.jonikas.2022@@mumail.ie}>
-#'
-#'
 #'
 #' @examples
-#' tidy_data <- function(data) {
-#' if (!is.data.frame(data)){
-#' stop("Input must be a data frame")
-#' }
-#'
-#' tidied_data <- data %>%
-#' na.omit(data) %>%
-#' clean_names(case = case)
-#' }
-#'
-#' new_data <- tidy_data(data, case = "upper_camel")
+#' df <- data.frame(VarA = c(NA,1,2), VarB = 1:3)
+#' tidy_data(df, case = "snake")
 tidy_data <- function(data, case = "snake") {
 
   if (!is.data.frame(data)) {
     stop("Input must be a data frame")
   }
 
+  # Use the pipe inside a function (which is fine once magrittr is imported).
   tidied_data <- data %>%
-    na.omit(data) %>%
+    na.omit() %>%
     clean_names(case = case)
 
-  return(tidied_data)
+  class(tidied_data) <- c("tidy_data", class(tidied_data))
+  tidied_data
 }
 
-cleaned_Data <-tidy_data(data, "snake")
-#devtools::check()
 
-## Function 2: Making this dataset available as part of this R package
-
-#' Load in and save plant data for use with the package.
+# ------------------------------------------------------------------------------
+#' Load and save plant data for use with the package
 #'
-#' A function to save the data from the package as an R object to be used
-#' with the other functions inside the package. It is saved using the
-#' 'usethis :: use_data' function
+#' Saves the supplied data frame as an internal `.rda` file, so that it can be
+#' used in the package. It uses [usethis::use_data()] to compress and overwrite
+#' any existing data with the same name.
 #'
-#' @param data
-#'
-#' @return An object of class \code{"data"} which is a list of \code{\link[tibble]{tibble}}s which
-#' contains plant stress responses for species in ambient and warm temperature conditions.
+#' @param data A data frame to be saved with \code{usethis::use_data}.
+#' @return Invisibly returns \code{TRUE} on success (from use_data).
+#' @export
 #'
 #' @details
-#' The function saves the data with 'compress = "xz"' to reduce the file size
-#' and 'overwrite = TRUE' to allow it to overwrite any existing data in the
-#' environment with the same name.
-#'
-#' @export
-#' @author Erin Weadick - <\email{erin.weadick.2022@@mumail.ie}>
-#' @author Kate Mullins - <\email{kate.mullins.2022@@mumail.ie}>
-#' @author Daniel McKean - <\email{daniel.mckean.2022@@mumail.ie}>
-#' @author Laurynas Jonikas - <\email{laurynas.jonikas.2022@@mumail.ie}>
-#'
-#' @importFrom usethis use_data
+#' Use this only if you want to bundle or update data as part of the development
+#' workflow. Typically not called by end users unless they want to overwrite the
+#' existing dataset.
 #'
 #' @examples
 #' \dontrun{
-#' clean_data <- data.frame(x = 1:10, y = rnorm(10))
-#' load_Data(clean_Data)
+#' my_df <- data.frame(x = 1:10, y = rnorm(10))
+#' load_data(my_df)
 #' }
-#'
 load_data <- function(data){
-  usethis::use_data(data, compress="xz",overwrite = TRUE)
+  usethis::use_data(data, compress = "xz", overwrite = TRUE)
 }
 
-load_data(cleaned_Data)
 
-##Function 3: Plotting inputted x vs. y
+# ------------------------------------------------------------------------------
 #' Plot one variable against another in the tidied dataset
 #'
-#' This function takes a tidied dataset, plus the desired x and y columns,
+#' This function takes a **tidy_data** object plus the desired x and y columns,
 #' and produces a scatter plot with a linear regression line.
 #'
-#' @param object A data frame (preferably tidied via \code{\link{tidy_data}}).
-#' @param x A character string indicating the x-column name.
-#' @param y A character string indicating the y-column name.
-#' @param ... Other arguments passed to the underlying \code{ggplot2} functions.
+#' @param object A data frame of class \code{tidy_data}.
+#' @param x A string naming the x-column.
+#' @param y A string naming the y-column.
+#' @param ... Additional arguments passed to ggplot2 functions (currently not used).
 #'
-#' @return A \code{ggplot} object.
-#'
+#' @return A \code{ggplot} object showing a scatter plot and a linear regression line.
 #' @export
-#' @author Erin Weadick - <\email{erin.weadick.2022@@mumail.ie}>
-#' @author Kate Mullins - <\email{kate.mullins.2022@@mumail.ie}>
-#' @author Daniel McKean - <\email{daniel.mckean.2022@@mumail.ie}>
-#' @author Laurynas Jonikas - <\email{laurynas.jonikas.2022@@mumail.ie}>
-#'
-#' @importFrom ggplot2 "ggplot"
 #'
 #' @examples
-#'
-#' plot.tidy_data(cleaned_Data, "spad", "chlorophyll", )
+#' \dontrun{
+#' # Suppose 'raw_data' has columns "spad" and "chlorophyll":
+#' # (If 'raw_data' is recognized by your package.)
+#' plot.tidy_data(tidy_data(raw_data), "spad", "chlorophyll")
+#' }
 plot.tidy_data <- function(object, x, y, ...) {
+
   if (missing(x) || missing(y)) {
     stop("You must specify both x and y for the plot.")
   }
 
   ggplot(object, aes(x = .data[[x]], y = .data[[y]])) +
     geom_point(color = "steelblue", size = 3, alpha = 0.8) +
-    geom_smooth(method = "lm", color = "darkred", se = FALSE, linetype = "dashed", linewidth = 1) +
+    geom_smooth(method = "lm", color = "darkred", se = FALSE,
+                linetype = "dashed", linewidth = 1) +
     theme_minimal(base_size = 14) +
     theme(
-      plot.title = element_text(hjust = 0.5, face = "bold", color = "darkblue", size = 16),
-      panel.grid.major = element_line(color = "lightgray", linetype = "dotted"),
+      plot.title       = element_text(hjust = 0.5, face = "bold",
+                                      color = "darkblue", size = 16),
+      panel.grid.major = element_line(color = "lightgray",
+                                      linetype = "dotted"),
       panel.grid.minor = element_blank()
     )
 }
 
-plot.tidy_data(cleaned_Data, "spad", "chlorophyll")
-
-
+# End of R-code.R

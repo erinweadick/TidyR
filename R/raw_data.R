@@ -1,0 +1,6 @@
+#' Example dataset `raw_data`
+#'
+#' A demonstration dataset containing ...
+#'
+#' @format A data frame with ...
+"raw_data"
