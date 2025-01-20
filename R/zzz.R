@@ -6,7 +6,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom janitor clean_names
 #' @importFrom stats na.omit
-#' @importFrom ggplot2 ggplot aes geom_point geom_smooth theme_minimal theme element_text element_line element_blank
+#' @importFrom ggplot2 ggplot aes_string geom_point geom_smooth theme_minimal theme element_text element_line element_blank
 #' @importFrom usethis use_data
 ## usethis namespace: end
 NULL

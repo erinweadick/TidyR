@@ -20,7 +20,6 @@ Imports:
     magrittr,
     readr,
     ggplot2,
-    dplyr,
     janitor,
     usethis
 Suggests:

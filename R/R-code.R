@@ -103,7 +103,7 @@ plot.tidy_data <- function(object, x, y, ...) {
     stop("You must specify both x and y for the plot.")
   }
 
-  ggplot(object, aes(x = .data[[x]], y = .data[[y]])) +
+  ggplot(object, aes_string(x = x, y = y)) +
     geom_point(color = "steelblue", size = 3, alpha = 0.8) +
     geom_smooth(method = "lm", color = "darkred", se = FALSE,
                 linetype = "dashed", linewidth = 1) +

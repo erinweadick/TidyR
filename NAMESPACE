@@ -3,7 +3,7 @@
 S3method(plot,tidy_data)
 export(load_data)
 export(tidy_data)
-importFrom(ggplot2,aes)
+importFrom(ggplot2,aes_string)
 importFrom(ggplot2,element_blank)
 importFrom(ggplot2,element_line)
 importFrom(ggplot2,element_text)
