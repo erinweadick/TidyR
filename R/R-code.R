@@ -1,11 +1,14 @@
 library(readr)
 library(dplyr)
 library(janitor)
-library(roxygen2)
+#library(roxygen2)
 library(ggplot2)
 
-data <- read_csv("R/Advanced r programming dataset.csv")
-data<- as.data.frame(data)
+#data <- read_csv("R/Advanced r programming dataset.csv")
+#data<- as.data.frame(data)
+#load data to temp
+data <- readr::read_csv(
+  file = system.file("extdata", "Advanced_r_programming_dataset.csv", package = "TidyR"))
 
 utils::globalVariables(c("x", "y", "SPAD", "chlorophyll", "stomatal", "leaf thickness","Leaf number","Tree ID", "Pot ID", "Culture", "Temperature"))
 
@@ -52,7 +55,7 @@ tidy_data <- function(data, case = "snake") {
 }
 
 cleaned_Data <-tidy_data(data, "snake")
-devtools::check()
+#devtools::check()
 
 ## Function 2: Making this dataset available as part of this R package
 

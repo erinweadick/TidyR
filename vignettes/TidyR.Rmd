@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   fig.width = 7,
   fig.height = 5,
@@ -16,13 +16,15 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+# Load your package
+library(TidyR)     
+
+# Load packages that provide %>% and clean_names (if you rely on them in examples)
+library(dplyr)      
+library(janitor)    
+library(ggplot2)
 ```
-
-```{r setup, echo=FALSE}
-library(TidyR)
-```
-
-
 ## Introduction
 
 __TidyR__ is an R package which tidies data, saves this tidied dataset and plots it. There are three functions provided:
@@ -41,9 +43,9 @@ __TidyR__ will run in Windows, Mac OS X, or Linux. To install it you first need 
 
 Once in R you can type at the R command prompt:
 
-```{r, eval=FALSE}
-#install.packages('devtools')
-#devtools::install_github('erinweadick/TidyR')
+```{r}
+ #install.packages("devtools")
+ #devtools::install_github("erinweadick/TidyR")
 ```
 
 To install the latest development version of the package from the __TidyR__ [GitHub page](https://github.com/erinweadick/TidyR). 
@@ -79,7 +81,7 @@ tidy_data <- function(data, case = "snake") {
 }
 
 cleaned_Data <-tidy_data(data, "snake")
-devtools::check()
+#devtools::check()
 ```
 
 
@@ -105,11 +107,8 @@ plot.tidy_data <- function(object, x, y, ...) {
   if (missing(x) || missing(y)) {
     stop("You must specify both x and y for the plot.")
   }
-```
 
-
-```{r}
-ggplot(object, aes(x = .data[[x]], y = .data[[y]])) +
+  ggplot(object, aes(x = .data[[x]], y = .data[[y]])) +
     geom_point(color = "steelblue", size = 3, alpha = 0.8) +
     geom_smooth(method = "lm", color = "darkred", se = FALSE, linetype = "dashed", linewidth = 1) +
     theme_minimal(base_size = 14) +

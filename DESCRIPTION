@@ -1,18 +1,31 @@
 Package: TidyR
 Type: Package
-Title: Tidying and Plotting Data 
+Title: Tidying and Plotting Data
 Version: 0.1.0
-Authors@R: c(person("Kate", "Mullins", email="mullinsk38@gmail.com", role=c("aut", "cre")),
-  person("Erin", "Weadick", email="erin.weadick.2022@mumail.ie", role=c("aut")),
-  person("Laurynas", "Jonikas", email="laurynas.jonikas.2025@mumail.ie", role=c("aut")),
-  person("Daniel", "McKean", email="daniel.mckean.2021@mumail.ie", role = c("aut")))
-Description: This package loads in a data file and tidies it by removing any NA values (spaces) and 
-    replacing them with dashes to make it easier to work with. The package also includes a function
-    that returns a plot of an inputted x and y.
+Authors@R: c(
+    person("Kate", "Mullins", email = "mullinsk38@gmail.com", role = c("aut", "cre")),
+    person("Erin", "Weadick", email = "erin.weadick.2022@mumail.ie", role = c("aut")),
+    person("Laurynas", "Jonikas", email = "laurynas.jonikas.2025@mumail.ie", role = c("aut")),
+    person("Daniel", "McKean", email = "daniel.mckean.2021@mumail.ie", role = c("aut")))
+Description: This package loads in a data file and tidies it by removing any NA values (spaces)
+    and replacing them with dashes to make it easier to work with. The package also includes a
+    function that returns a plot of an inputted x and y.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-URL:
-BugReports:
-Depends: 
-    R (>= 3.5)
+URL: https://github.com/erinweadick/TidyR
+BugReports: https://github.com/erinweadick/TidyR/issues
+Depends: R (>= 3.5)
+Imports:
+    usethis,
+    readr,
+    ggplot2,
+    dplyr,
+    janitor
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
