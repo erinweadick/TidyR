@@ -1,0 +1,6 @@
+#' Example dataset
+#'
+#' A demonstration dataset ...
+#'
+#' @format A data frame with 10 rows ...
+"data"

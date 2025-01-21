@@ -77,44 +77,43 @@ load_data <- function(data){
 }
 
 
-# ------------------------------------------------------------------------------
-#' Plot one variable against another in the tidied dataset
+## ------------------------------------------------------------------------------
+#' Plot a 'tidy_data' object
 #'
-#' This function takes a **tidy_data** object plus the desired x and y columns,
-#' and produces a scatter plot with a linear regression line.
+#' S3 method for plotting objects of class "tidy_data" using ggplot2.
+#' Users must specify the columns for the x and y axes via `var_x` and `var_y`.
 #'
-#' @param object A data frame of class \code{tidy_data}.
-#' @param x A string naming the x-column.
-#' @param y A string naming the y-column.
-#' @param ... Additional arguments passed to ggplot2 functions (currently not used).
-#'
-#' @return A \code{ggplot} object showing a scatter plot and a linear regression line.
+#' @param x A 'tidy_data' object to plot.
+#' @param y Ignored (exists for compatibility with the generic plot method).
+#' @param ... Additional arguments where `var_x` and `var_y` specify column names.
+#' @return A ggplot2 object.
 #' @export
-#'
-#' @examples
-#' \dontrun{
-#' # Suppose 'raw_data' has columns "spad" and "chlorophyll":
-#' # (If 'raw_data' is recognized by your package.)
-#' plot.tidy_data(tidy_data(raw_data), "spad", "chlorophyll")
-#' }
-plot.tidy_data <- function(object, x, y, ...) {
+#' @importFrom rlang .data
+plot.tidy_data <- function(x, y = NULL, ...) {
+  dots <- list(...)
+  var_x <- dots$var_x
+  var_y <- dots$var_y
 
-  if (missing(x) || missing(y)) {
-    stop("You must specify both x and y for the plot.")
+  if (is.null(var_x) || is.null(var_y)) {
+    stop("Both 'var_x' and 'var_y' must be specified via ...")
   }
 
-  ggplot(object, aes_string(x = x, y = y)) +
-    geom_point(color = "steelblue", size = 3, alpha = 0.8) +
-    geom_smooth(method = "lm", color = "darkred", se = FALSE,
-                linetype = "dashed", linewidth = 1) +
-    theme_minimal(base_size = 14) +
-    theme(
-      plot.title       = element_text(hjust = 0.5, face = "bold",
-                                      color = "darkblue", size = 16),
-      panel.grid.major = element_line(color = "lightgray",
-                                      linetype = "dotted"),
-      panel.grid.minor = element_blank()
+  ggplot2::ggplot(x, ggplot2::aes(x = .data[[var_x]], y = .data[[var_y]])) +
+    ggplot2::geom_point(color = "steelblue", size = 3, alpha = 0.8) +
+    ggplot2::geom_smooth(
+      method = "lm", color = "darkred", se = FALSE,
+      linetype = "dashed", linewidth = 1
+    ) +
+    ggplot2::theme_minimal(base_size = 14) +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(
+        hjust = 0.5, face = "bold",
+        color = "darkblue", size = 16
+      ),
+      panel.grid.major = ggplot2::element_line(
+        color = "lightgray",
+        linetype = "dotted"
+      ),
+      panel.grid.minor = ggplot2::element_blank()
     )
 }
-
-# End of R-code.R

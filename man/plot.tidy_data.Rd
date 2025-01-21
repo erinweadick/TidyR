@@ -2,30 +2,21 @@
 % Please edit documentation in R/R-code.R
 \name{plot.tidy_data}
 \alias{plot.tidy_data}
-\title{Plot one variable against another in the tidied dataset}
+\title{Plot a 'tidy_data' object}
 \usage{
-\method{plot}{tidy_data}(object, x, y, ...)
+\method{plot}{tidy_data}(x, y = NULL, ...)
 }
 \arguments{
-\item{object}{A data frame of class \code{tidy_data}.}
+\item{x}{A 'tidy_data' object to plot.}
 
-\item{x}{A string naming the x-column.}
+\item{y}{Ignored (exists for compatibility with the generic plot method).}
 
-\item{y}{A string naming the y-column.}
-
-\item{...}{Additional arguments passed to ggplot2 functions (currently not used).}
+\item{...}{Additional arguments where \code{var_x} and \code{var_y} specify column names.}
 }
 \value{
-A \code{ggplot} object showing a scatter plot and a linear regression line.
+A ggplot2 object.
 }
 \description{
-This function takes a \strong{tidy_data} object plus the desired x and y columns,
-and produces a scatter plot with a linear regression line.
-}
-\examples{
-\dontrun{
-# Suppose 'raw_data' has columns "spad" and "chlorophyll":
-# (If 'raw_data' is recognized by your package.)
-plot.tidy_data(tidy_data(raw_data), "spad", "chlorophyll")
-}
+S3 method for plotting objects of class "tidy_data" using ggplot2.
+Users must specify the columns for the x and y axes via \code{var_x} and \code{var_y}.
 }
