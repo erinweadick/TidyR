@@ -8,10 +8,11 @@
 
 library(testthat)
 library(TidyR)
+library(ggplot2)
+
 #### Test tidy_data() ####
 
 test_that("tidy_data() works correctly with a valid data frame (basic case)", {
-
   sample_df <- data.frame(
     SPAD        = c(10, NA, 15),
     Chlorophyll = c(30, 40, NA),
@@ -19,99 +20,80 @@ test_that("tidy_data() works correctly with a valid data frame (basic case)", {
     stringsAsFactors = FALSE
   )
 
-  cleaned_df <- tidy_data(sample_df)  # default case = "snake"
+  cleaned_df <- tidy_data(sample_df)
 
-  # Only one row should remain (rows with any NA are dropped)
   expect_equal(nrow(cleaned_df), 1)
-
-  # Column names should be snake_case
   expect_equal(names(cleaned_df), c("spad", "chlorophyll", "leaf_number"))
 })
 
-test_that("tidy_data() throws an error when input is not a data frame", {
+test_that("tidy_data() throws error for non-dataframe input", {
   expect_error(tidy_data(123), "Input must be a data frame")
 })
 
-test_that("tidy_data() handles data frames with no NAs (no rows dropped)", {
+test_that("tidy_data() handles data with no NAs", {
   sample_df <- data.frame(
-    SPAD        = c(10, 12, 15),
+    SPAD = c(10, 12, 15),
     Chlorophyll = c(30, 40, 45),
     stringsAsFactors = FALSE
   )
 
-  # No NA values => no rows dropped
   cleaned_df <- tidy_data(sample_df)
   expect_equal(nrow(cleaned_df), 3)
-  # Check that column names were converted
   expect_equal(names(cleaned_df), c("spad", "chlorophyll"))
 })
 
-test_that("tidy_data() respects different case arguments", {
+test_that("tidy_data() respects case arguments", {
   sample_df <- data.frame(
-    SPAD        = c(10, 12),
+    SPAD = c(10, 12),
     Chlorophyll = c(30, 45),
     stringsAsFactors = FALSE
   )
 
-  # Try upper_camel
-  cleaned_camel <- tidy_data(sample_df, case = "upper_camel")
-  expect_equal(names(cleaned_camel), c("Spad", "Chlorophyll"))
-
-  # Try lower_camel
-  cleaned_lower_camel <- tidy_data(sample_df, case = "lower_camel")
-  expect_equal(names(cleaned_lower_camel), c("spad", "chlorophyll"))
+  # Test different naming cases
+  expect_equal(names(tidy_data(sample_df, "upper_camel")), c("Spad", "Chlorophyll"))
+  expect_equal(names(tidy_data(sample_df, "lower_camel")), c("spad", "chlorophyll"))
 })
 
 #### Test load_data() ####
+test_that("load_data() runs without errors", {
+  test_df <- data.frame(x = 1:3, y = letters[1:3])
+  mock_use_data <- function(...) return(invisible(TRUE))
 
-test_that("load_data() runs without error", {
-  test_df <- data.frame(
-    x = 1:3,
-    y = c("a", "b", "c"),
-    stringsAsFactors = FALSE
+  with_mocked_bindings(
+    load_data(test_df),
+    "use_data" = mock_use_data,
+    .package = "usethis"
   )
-
-  # load_data() calls usethis::use_data() internally,
-  # so you need usethis installed or in your DESCRIPTION.
-  # We suppress messages because use_data() can print info.
-  expect_silent({
-    suppressMessages(load_data(test_df))
-  })
+  expect_true(TRUE)
 })
+
 
 #### Test plot.tidy_data() ####
 
-test_that("plot.tidy_data() returns a ggplot object for valid inputs", {
+test_that("plot.tidy_data() returns ggplot object", {
   sample_df <- data.frame(
-    SPAD        = c(10, 12, 15),
+    SPAD = c(10, 12, 15),
     Chlorophyll = c(30, 40, 45),
     stringsAsFactors = FALSE
   )
   cleaned_df <- tidy_data(sample_df)
 
-  p <- plot.tidy_data(cleaned_df, "spad", "chlorophyll")
-
-  # The returned plot should be a ggplot object
-  expect_true(inherits(p, "ggplot"))
+  # Use generic plot() with named arguments
+  p <- plot(cleaned_df, var_x = "spad", var_y = "chlorophyll")
+  expect_s3_class(p, "ggplot")
 })
 
-test_that("plot.tidy_data() throws error if x or y is missing", {
+test_that("plot.tidy_data() validates required arguments", {
   sample_df <- data.frame(
-    SPAD        = c(10, 12),
+    SPAD = c(10, 12),
     Chlorophyll = c(30, 40),
     stringsAsFactors = FALSE
   )
   cleaned_df <- tidy_data(sample_df)
 
-  # Missing 'x'
-  expect_error(plot.tidy_data(cleaned_df, y = "chlorophyll"),
-               "You must specify both x and y")
-
-  # Missing 'y'
-  expect_error(plot.tidy_data(cleaned_df, x = "spad"),
-               "You must specify both x and y")
+  # Test missing arguments
+  expect_error(plot(cleaned_df), "Both 'var_x' and 'var_y' must be specified")
+  expect_error(plot(cleaned_df, var_x = "spad"), "Both 'var_x' and 'var_y' must be specified")
+  expect_error(plot(cleaned_df, var_y = "chlorophyll"), "Both 'var_x' and 'var_y' must be specified")
 })
-
-# Finally, run all tests in this package.
-test_check("TidyR")
 
