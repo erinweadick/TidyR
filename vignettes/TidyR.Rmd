@@ -10,7 +10,6 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.width = 7,fig.height = 5,
                       fig.align = "center", message = FALSE,
@@ -38,7 +37,7 @@ __TidyR__ will run in Windows, Mac OS X, or Linux. To install it you first need 
 
 In R you can type the following into the Console tab:
 
-```{r}
+```{r, eval=FALSE}
 install.packages('devtools')
 devtools::install_github("erinweadick/TidyR")
 ```

@@ -1,24 +1,8 @@
 # R-code.R
-
-# 1) Read and pre-clean the CSV without using the pipe at top-level
-#    (So we avoid the "could not find function `%>%`" error at load time.)
-
-#raw_data <- readr::read_csv(
-#  file = system.file("extdata", "Advanced_r_programming_dataset.csv", package = "TidyR"), show_col_types = FALSE
-#)
-
-
 utils::globalVariables(c(
   "x", "y", "SPAD", "chlorophyll", "stomatal", "leaf thickness",
   "Leaf number", "Tree ID", "Pot ID", "Culture", "Temperature"
 ))
-# In an R session:
-#raw_data <- readr::read_csv("inst/extdata/Advanced_r_programming_dataset.csv",show_col_types = FALSE)
-#raw_data <- stats::na.omit(raw_data)
-#raw_data <- janitor::clean_names(raw_data, case="snake")
-# Now store it as an .rda in your 'data/' folder:
-#usethis::use_data(raw_data, overwrite=TRUE)
-
 
 # ------------------------------------------------------------------------------
 #' Tidy data for use in other functions
@@ -50,7 +34,6 @@ tidy_data <- function(data, case = "snake") {
   tidied_data
 }
 
-
 # ------------------------------------------------------------------------------
 #' Load and save plant data for use with the package
 #'
@@ -75,7 +58,6 @@ tidy_data <- function(data, case = "snake") {
 load_data <- function(data){
   usethis::use_data(data, compress = "xz", overwrite = TRUE)
 }
-
 
 ## ------------------------------------------------------------------------------
 #' Plot a 'tidy_data' object
