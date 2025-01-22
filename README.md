@@ -51,12 +51,13 @@ cleaned_data <- tidy_data(raw_data, case = "snake")
 Data Visualization
 
 ```r
-plot(tidied_data,var_x = "chlorophyll",var_y = "spad")
+plot(cleaned_data,var_x = "chlorophyll",var_y = "spad")
 #Output:scatter plot with regression line
 ```
 Example visualization
 
-![000012](https://github.com/user-attachments/assets/2af955ac-a541-48f8-a267-f2aed0046739)
+![Rplot](https://github.com/user-attachments/assets/8e95b1de-15b8-4581-9aca-e67416481777)
+
 
 Data loading into package
 ```r
