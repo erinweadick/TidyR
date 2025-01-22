@@ -53,9 +53,12 @@ library(TidyR)
 it will load in all the aforementioned __TidyR__ functions.
 
 ### Load data
-```{r}
-#load data
-data("raw_data", package = "TidyR")
+```{r data-prep}
+library(TidyR)
+
+data(raw_data)
+
+
 head(raw_data)
 ```
 
@@ -79,6 +82,8 @@ tidy_data <- function(data, case = "snake") {
   class(tidied_data) <- c("tidy_data", class(tidied_data))
   tidied_data
 }
+
+tidied_data <- tidy_data(raw_data, case = "snake")
 ```
 
 
@@ -128,6 +133,8 @@ plot.tidy_data <- function(x, y = NULL, ...) {
       panel.grid.minor = ggplot2::element_blank()
     )
 }
+#Example
+plot(tidied_data,var_x = "chlorophyll",var_y = "spad")
 ```
 
 The output of the plot.tidy_data function is a scatter plot using ggplot2. This includes a dashed, red linear regression line, allowing users to visualize relationships between two variables in the tidied dataset. The points of the scatterplot are a 'steelblue' colour. This is displayed over a 'lightgrey' panel grid.

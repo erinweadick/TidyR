@@ -39,7 +39,7 @@ tidy_data <- function(data, case = "snake") {
 #'
 #' Saves the supplied data frame as an internal `.rda` file, so that it can be
 #' used in the package. It uses [usethis::use_data()] to compress and overwrite
-#' any existing data with the same name.
+#' any existing data with the same name. Note: only can be used in package development.
 #'
 #' @param data A data frame to be saved with \code{usethis::use_data}.
 #' @return Invisibly returns \code{TRUE} on success (from use_data).
@@ -71,6 +71,11 @@ load_data <- function(data){
 #' @return A ggplot2 object.
 #' @export
 #' @importFrom rlang .data
+#' @examples
+#' \dontrun{
+#' plot(tidied_data,var_x = "chlorophyll",var_y = "spad")
+#' }
+#'
 plot.tidy_data <- function(x, y = NULL, ...) {
   dots <- list(...)
   var_x <- dots$var_x

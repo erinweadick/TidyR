@@ -20,3 +20,9 @@ A ggplot2 object.
 S3 method for plotting objects of class "tidy_data" using ggplot2.
 Users must specify the columns for the x and y axes via \code{var_x} and \code{var_y}.
 }
+\examples{
+\dontrun{
+plot(tidied_data,var_x = "chlorophyll",var_y = "spad")
+}
+
+}

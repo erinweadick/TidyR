@@ -15,7 +15,7 @@ Invisibly returns \code{TRUE} on success (from use_data).
 \description{
 Saves the supplied data frame as an internal \code{.rda} file, so that it can be
 used in the package. It uses \code{\link[usethis:use_data]{usethis::use_data()}} to compress and overwrite
-any existing data with the same name.
+any existing data with the same name. Note: only can be used in package development.
 }
 \details{
 Use this only if you want to bundle or update data as part of the development

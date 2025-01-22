@@ -16,6 +16,9 @@ LazyData: true
 URL: https://github.com/erinweadick/TidyR
 BugReports: https://github.com/erinweadick/TidyR/issues
 Depends: R (>= 3.5)
+Data: 
+   data.rda,
+   raw_data.rda
 Imports:
     magrittr,
     readr,
