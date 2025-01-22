@@ -1,6 +1,10 @@
 ---
 title: "TidyR"
-output: rmarkdown::html_vignette
+output: 
+  bookdown::html_document2:
+      base_format: rmarkdown::html_vignette
+      fig_caption: yes
+      number_sections: no
 vignette: >
   %\VignetteIndexEntry{TidyR}
   %\VignetteEngine{knitr::rmarkdown}
@@ -8,42 +12,35 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  fig.width = 7,
-  fig.height = 5,
-  fig.align = "center",
-  message = FALSE,
-  collapse = TRUE,
-  comment = "#>"
-)
+knitr::opts_chunk$set(fig.width = 7,fig.height = 5,
+                      fig.align = "center", message = FALSE,
+                      collapse = TRUE, comment = "#>" )
 
-# Load your package
 library(TidyR)     
-
 library(janitor)    
 library(ggplot2)
 ```
+
 ## Introduction
 
 __TidyR__ is an R package which tidies data, saves this tidied dataset and plots it. There are three functions provided:
 
-  Function 1 : The `tidy_data()` function makes column names the same and removes any NA values.
+  Function 1 : The `tidy_data` function makes column names the same and removes any NA values.
   
-  Function 2: The `load_data()` function saves the processed dataset and makes available as part of this R package
+  Function 2: The `load_data` function saves the processed dataset and makes available as part of this R package
   
-  Function 3: The `plot.tidy_data()` function generates a plot for the inputted x vs y based on `ggplot2`.
+  Function 3: The `plot.tidy_data` function generates a plot for the inputted x vs y based on `ggplot2`.
+
 
 ### Installation
 
-//////////////////////////////////////////////
-
 __TidyR__ will run in Windows, Mac OS X, or Linux. To install it you first need to install [R](https://cran.r-project.org/). Installing [RStudio](https://www.rstudio.com/) as a nice desktop environment for using R is also recommended.
 
-Once in R you can type at the R command prompt:
+In R you can type the following into the Console tab:
 
 ```{r}
- #install.packages("devtools")
- #devtools::install_github("erinweadick/TidyR")
+install.packages('devtools')
+devtools::install_github("erinweadick/TidyR")
 ```
 
 To install the latest development version of the package from the __TidyR__ [GitHub page](https://github.com/erinweadick/TidyR). 
@@ -56,7 +53,6 @@ library(TidyR)
 
 it will load in all the aforementioned __TidyR__ functions.
 
-//////////////////////////////////////////////
 ### Load data
 ```{r}
 #load data
@@ -64,7 +60,7 @@ data("raw_data", package = "TidyR")
 head(raw_data)
 ```
 
-## Function 1 : tidy_data
+## tidy_data
 
 This function converts column names to a specified case style (e.g., snake_case, UpperCamelCase).
 It removes rows with NA values.
@@ -78,50 +74,61 @@ tidy_data <- function(data, case = "snake") {
   }
 
   tidied_data <- data %>%
-    na.omit(data) %>%
+    na.omit() %>%
     clean_names(case = case)
 
-  return(tidied_data)
+  class(tidied_data) <- c("tidy_data", class(tidied_data))
+  tidied_data
 }
-
-cleaned_Data <-tidy_data(raw_data, "snake")
-#devtools::check()
 ```
 
 
-## Function 2: load_data
+## load_data
 
 This function saves the processed dataset as an R object, allowing it to be used seamlessly within the package. It is saved using the 'usethis :: use_data' function.
+
 ```{r}
 load_data <- function(data){
-  usethis::use_data(data, compress="xz",overwrite = TRUE)
+  usethis::use_data(data, compress = "xz", overwrite = TRUE)
 }
-
-load_data(cleaned_Data)
 ```
 
 
-## Function 3: plot.tidy_data
+## plot.tidy_data
 
-This function generates scatter plots using ggplot2. It produces a dashed, red linear regression line, allowing users to visualize relationships between two variables in the tidied dataset. The points of the scatterplot are a 'steelblue' colour.
-
+This final function generates a scatter plot. The function checks if var_x and var_y are provided. If either is missing, an error message is displayed: "Both 'var_x' and 'var_y' must be specified via ...".
+Our `geom_point` adds scatter plot points, our `geom_smooth` adds a linear regression line without the confidence interval.
+`theme_minimal` produces a clean, minimalistic look.
 
 ```{r}
-plot.tidy_data <- function(object, x, y, ...) {
-  if (missing(x) || missing(y)) {
-    stop("You must specify both x and y for the plot.")
+plot.tidy_data <- function(x, y = NULL, ...) {
+  dots <- list(...)
+  var_x <- dots$var_x
+  var_y <- dots$var_y
+
+  if (is.null(var_x) || is.null(var_y)) {
+    stop("Both 'var_x' and 'var_y' must be specified via ...")
   }
 
-  ggplot(object, aes(x = .data[[x]], y = .data[[y]])) +
-    geom_point(color = "steelblue", size = 3, alpha = 0.8) +
-    geom_smooth(method = "lm", color = "darkred", se = FALSE, linetype = "dashed", linewidth = 1) +
-    theme_minimal(base_size = 14) +
-    theme(
-      plot.title = element_text(hjust = 0.5, face = "bold", color = "darkblue", size = 16),
-      panel.grid.major = element_line(color = "lightgray", linetype = "dotted"),
-      panel.grid.minor = element_blank()
+  ggplot2::ggplot(x, ggplot2::aes(x = .data[[var_x]], y = .data[[var_y]])) +
+    ggplot2::geom_point(color = "steelblue", size = 3, alpha = 0.8) +
+    ggplot2::geom_smooth(
+      method = "lm", color = "darkred", se = FALSE,
+      linetype = "dashed", linewidth = 1
+    ) +
+    ggplot2::theme_minimal(base_size = 14) +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(
+        hjust = 0.5, face = "bold",
+        color = "darkblue", size = 16
+      ),
+      panel.grid.major = ggplot2::element_line(
+        color = "lightgray",
+        linetype = "dotted"
+      ),
+      panel.grid.minor = ggplot2::element_blank()
     )
 }
-
-plot.tidy_data(cleaned_Data, "spad", "chlorophyll")
 ```
+
+The output of the plot.tidy_data function is a scatter plot using ggplot2. This includes a dashed, red linear regression line, allowing users to visualize relationships between two variables in the tidied dataset. The points of the scatterplot are a 'steelblue' colour. This is displayed over a 'lightgrey' panel grid.
